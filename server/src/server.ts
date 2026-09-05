@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 
 import { connectDB } from "./config/db";
+import authRoute from './routes/authRoute'
 
 
 const app =express()
@@ -17,6 +18,11 @@ app.get('/',(_req,res)=>[
         message:'OLX API is running'
     })
 ])
+
+//Routes
+app.use('/',authRoute)
+
+
 
 const PORT=process.env.PORT || 5000
 
