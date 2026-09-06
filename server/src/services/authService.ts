@@ -1,4 +1,4 @@
-import { compare } from 'bcryptjs';
+import { generateToken } from '../utils/jwt';
 import User from '../models/user'
 import { hashedPassword,comparePassword } from '../utils/password'
 
@@ -29,10 +29,15 @@ export const registerUser=async ({name,email,password}:RegisterInterface)=>{
         password:hashPassword
     })
 
+    const token =generateToken(user._id.toString())
+
     return {
-        id:user._id,
-        email:user.email,
-        name:user.name
+        user:{
+            id:user._id,
+            email:user.email,
+            name:user.name
+        },
+        token
     }
 
 }
@@ -52,10 +57,15 @@ export const loginUser=async ({email,password}:LoginInterface)=>{
         throw new Error('Email or Password are Incorrect')
     }   
 
+    const token=generateToken(existingUser._id.toString())
+
     return {
-        id:existingUser._id,
-        name:existingUser.name,
-        email:existingUser.email
+        user:{
+            id:existingUser._id,
+            name:existingUser.name,
+            email:existingUser.email
+        },
+        token
     }
 }
 
