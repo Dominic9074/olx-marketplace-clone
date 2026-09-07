@@ -28,9 +28,6 @@ export default function Signup() {
             toast.success('Account Created Successfully')
             navigate('/')
         }
-
-        
-
     }
 
     if(error){

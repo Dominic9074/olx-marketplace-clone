@@ -10,6 +10,10 @@ const initialState : AuthState={
     error:null
 }
 
+const saveAuthToken=(user:AuthState['user'],token:string | null)=>{
+    localStorage.setItem('auth',JSON.stringify({user,token}))
+}
+
 
 const authSlice=createSlice({
     name:'auth',
@@ -36,6 +40,8 @@ const authSlice=createSlice({
                 state.token=action.payload.token ?? null;
                 state.isAuthenticated=true;
                 state.error=null;
+                //localstorage token save
+                saveAuthToken(action.payload.user,action.payload.token ?? null)
             })
             .addCase(loginUser.rejected,(state,action)=>{
                 state.error=action.payload ?? 'Login Failed'
@@ -52,6 +58,8 @@ const authSlice=createSlice({
                 state.error=null;
                 state.isAuthenticated=true;
                 state.token=action.payload.token ?? null;
+                //localstorage token save
+                saveAuthToken(action.payload.user,action.payload.token ?? null)
             })
             .addCase(registerUser.rejected,(state,action)=>{
                 state.error=action.payload ?? 'Signup Failed'

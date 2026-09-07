@@ -1,6 +1,11 @@
 import { useForm } from "react-hook-form";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { loginUser } from "../features/auth/authThunk";
+import { toast } from "react-toastify";
+import LoadingSpinner from "../components/spinloader/LoadingSpinner";
+import { useEffect, useRef } from "react";
 
 interface userFormInterface{
   name:string;
@@ -13,11 +18,27 @@ export default function Login() {
 
   const {register,handleSubmit,formState:{errors}}=useForm<userFormInterface>()
   const navigate=useNavigate()
+  const dispatch=useAppDispatch();
+  const {loading,error}=useAppSelector(state=>state.auth)
 
-  const handleLogin=async ()=>{
-    console.log('logged in');
-    navigate('/')
+  const handleLogin=async (data:userFormInterface)=>{
+    const result =await dispatch(loginUser(data));
+
+    if(loginUser.fulfilled.match(result)){
+      toast.success('Login Successful')
+      navigate('/')
+    }
+
   }
+
+  const lastError = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (error && error !== lastError.current) {
+      toast.error(error);
+      lastError.current = error;
+    }
+  }, [error]);
 
   return (
     <div className="login-wrapper">
