@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { AuthState } from "./authType";
 import { loginUser, registerUser } from "./authThunk";
+import { getStoredAuth } from "./authStorage";
 
+const storedAuth=getStoredAuth();
 const initialState : AuthState={
-    user:null,
-    token:null,
-    isAuthenticated:false,
+    user:storedAuth?.user ??null ,
+    token:storedAuth?.token ??null,
+    isAuthenticated:!!storedAuth?.token,
     loading:false,
     error:null
 }
+
+
 
 const saveAuthToken=(user:AuthState['user'],token:string | null)=>{
     localStorage.setItem('auth',JSON.stringify({user,token}))
@@ -24,6 +28,8 @@ const authSlice=createSlice({
             state.token=null,
             state.isAuthenticated=false,
             state.error=null
+
+            localStorage.removeItem('auth')
         },
     },
     extraReducers:(builder)=>{
