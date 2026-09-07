@@ -1,11 +1,11 @@
 import './App.css'
-import Home from './pages/Home.tsx'
+import AppRouter from './routes/AppRouter.tsx'
 
 function App() {
 
   return (
     <>
-      <Home />
+      <AppRouter />
     </>
   )
 }
