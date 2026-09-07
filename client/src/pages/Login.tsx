@@ -1,7 +1,24 @@
-
+import { useForm } from "react-hook-form";
 import "./Login.css";
+import { useNavigate } from "react-router-dom";
+
+interface userFormInterface{
+  name:string;
+  email:string;
+  password:string;
+  confirmPassword:string;
+}
 
 export default function Login() {
+
+  const {register,handleSubmit,formState:{errors}}=useForm<userFormInterface>()
+  const navigate=useNavigate()
+
+  const handleLogin=async ()=>{
+    console.log('logged in');
+    navigate('/')
+  }
+
   return (
     <div className="login-wrapper">
       <div className="login-card">
@@ -10,15 +27,18 @@ export default function Login() {
         <p className="login-subtext">The trusted community of buyers and sellers.</p>
 
         {/* Login Form */}
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleSubmit(handleLogin)} >
           <div className="input-field-group">
             <label htmlFor="email">Email Address</label>
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              required
+              {...register('email',{
+                required:'Email is required',
+              })}
             />
+            {errors.email && <p style={{ color: "red",margin:0 }}>{errors.email.message}</p>}
           </div>
 
           <div className="input-field-group">
@@ -29,8 +49,12 @@ export default function Login() {
               id="password"
               type="password"
               placeholder="Enter your password"
-              required
+              {...register('password',{
+                required:'password is required',
+                minLength:{value:6,message:'password should contain at least 6 character'}
+              })}
             />
+            {errors.password && <p style={{ color: "red",margin:0 }}>{errors.password.message}</p>}
           </div>
 
           <button type="submit" className="login-submit-btn">
@@ -40,7 +64,7 @@ export default function Login() {
 
         <div className="login-footer">
           <span>Don't have an account?</span>
-          <a href="#register" className="create-account-link">Sign up</a>
+          <a href="/signup" className="create-account-link">Sign up</a>
         </div>
       </div>
     </div>

@@ -1,0 +1,132 @@
+.signup-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f7f8f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.signup-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(0, 47, 52, 0.08);
+  padding: 2.25rem 2rem 2rem;
+  box-sizing: border-box;
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #002f34;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  opacity: 0.7;
+}
+
+.signup-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #002f34;
+  margin: 0 0 0.35rem 0;
+  text-align: center;
+}
+
+.signup-subtext {
+  font-size: 0.875rem;
+  color: #7f9799;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.input-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.input-field-group label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #002f34;
+}
+
+.input-field-group input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.9375rem;
+  border: 2px solid #002f34;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+  color: #002f34;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field-group input::placeholder {
+  color: #a3b8b9;
+}
+
+.input-field-group input:focus {
+  border-color: #23e5db;
+  box-shadow: 0 0 0 2px rgba(35, 229, 219, 0.2);
+}
+
+.signup-submit-btn {
+  margin-top: 0.5rem;
+  width: 100%;
+  background-color: #002f34;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.signup-submit-btn:hover {
+  background-color: #003f47;
+}
+
+.signup-submit-btn:active {
+  transform: scale(0.99);
+}
+
+.signup-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #ebedf0;
+  font-size: 0.875rem;
+  color: #4a5568;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.login-account-link {
+  color: #002f34;
+  font-weight: 700;
+  text-decoration: underline;
+}

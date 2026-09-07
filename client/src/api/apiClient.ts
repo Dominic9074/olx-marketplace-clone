@@ -1,5 +1,6 @@
 import axios from "axios";
-import { store } from "../app/store";
+import type { RootState } from "../app/store";
+import type { Store } from "@reduxjs/toolkit";
 
 const apiClient=axios.create({
     baseURL:'http://localhost:5000/',
@@ -8,7 +9,8 @@ const apiClient=axios.create({
     }
 })
 
-apiClient.interceptors.request.use(
+export const setupInterceptors=(store:Store<RootState>)=>{
+    apiClient.interceptors.request.use(
     (config)=>{
         const token=store.getState().auth.token;
 
@@ -21,5 +23,6 @@ apiClient.interceptors.request.use(
         return Promise.reject(error)
     }
 )
+}
 
 export default apiClient;
