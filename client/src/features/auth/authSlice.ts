@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { AuthState } from "./authType";
+import { loginUser, registerUser } from "./authThunk";
 
 const initialState : AuthState={
     user:null,
@@ -20,6 +21,41 @@ const authSlice=createSlice({
             state.isAuthenticated=false,
             state.error=null
         },
+    },
+    extraReducers:(builder)=>{
+        builder
+
+            //LOGIN
+            .addCase(loginUser.pending,(state)=>{
+                state.loading=true;
+                state.error=null;
+            })
+            .addCase(loginUser.fulfilled,(state,action)=>{
+                state.loading=false,
+                state.user=action.payload.user;
+                state.token=action.payload.token ?? null;
+                state.isAuthenticated=true;
+                state.error=null;
+            })
+            .addCase(loginUser.rejected,(state,action)=>{
+                state.error=action.payload ?? 'Login Failed'
+            })
+
+            //register
+            .addCase(registerUser.pending,(state)=>{
+                state.loading=true;
+                state.error=null;
+            })
+            .addCase(registerUser.fulfilled,(state,action)=>{
+                state.loading=false;
+                state.user=action.payload.user;
+                state.error=null;
+                state.isAuthenticated=true;
+                state.token=action.payload.token ?? null;
+            })
+            .addCase(registerUser.rejected,(state,action)=>{
+                state.error=action.payload ?? 'Signup Failed'
+            })
     }
 })
 
