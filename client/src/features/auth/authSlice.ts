@@ -13,7 +13,6 @@ const initialState : AuthState={
 }
 
 
-
 const saveAuthToken=(user:AuthState['user'],token:string | null)=>{
     localStorage.setItem('auth',JSON.stringify({user,token}))
 }
