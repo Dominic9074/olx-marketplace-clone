@@ -15,6 +15,12 @@ export const createProduct=async ({title,description,price,sellerId,category,ima
     return product;
 }
 
+export const getProducts=async ()=>{
+    const products=await Product.find({isSold:false}).sort({createdAt:-1})
+
+    return products;
+}
+
 
 
 

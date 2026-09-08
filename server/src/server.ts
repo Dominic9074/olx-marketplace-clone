@@ -4,6 +4,7 @@ import 'dotenv/config'
 
 import { connectDB } from "./config/db";
 import authRoute from './routes/authRoute'
+import productRoute from './routes/productRoute'
 
 
 const app =express()
@@ -21,6 +22,7 @@ app.get('/',(_req,res)=>[
 
 //Routes
 app.use('/',authRoute)
+app.use('/',productRoute)
 
 
 
