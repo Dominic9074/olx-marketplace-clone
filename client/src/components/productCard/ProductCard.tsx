@@ -1,6 +1,10 @@
 import "./ProductCard.css";
 
-export default function ProductCard() {
+interface ProductCardProps{
+    isSeller?:boolean
+}
+
+export default function ProductCard({isSeller}:ProductCardProps) {
   return (
     <article className="olx-product-card">
       <div className="card-image-wrapper">
@@ -23,9 +27,24 @@ export default function ProductCard() {
 
         <div className="card-footer">
           <span className="card-date">2 days ago</span>
-          <button type="button" className="card-cart-btn">
-            Add to Cart
-          </button>
+          {isSeller ? (<div className="card-actions-seller">
+                <button type="button" className="card-btn-action card-btn-edit"
+                    onClick={(e) => {e.stopPropagation()}}> Edit</button>
+                <button type="button" className="card-btn-action card-btn-delete"onClick={(e) => { e.stopPropagation(); }} >
+                    Delete</button>
+            </div>
+            ) : (
+            <button
+                type="button"
+                className="card-cart-btn"
+                onClick={(e) => {
+                e.stopPropagation();
+                
+                }}
+            >
+                Add to Cart
+            </button>
+            )}
         </div>
       </div>
     </article>

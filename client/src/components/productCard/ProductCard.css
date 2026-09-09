@@ -131,3 +131,47 @@
 .card-cart-btn:active {
   transform: scale(0.96);
 }
+/* Container for the seller action buttons */
+.card-actions-seller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Base style for Edit / Delete buttons */
+.card-btn-action {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Edit button - Deep teal outline */
+.card-btn-edit {
+  background-color: transparent;
+  color: #002f34;
+  border: 1.5px solid #002f34;
+}
+
+.card-btn-edit:hover {
+  background-color: #002f34;
+  color: #ffffff;
+}
+
+/* Delete button - Subtle red */
+.card-btn-delete {
+  background-color: transparent;
+  color: #d9383a;
+  border: 1.5px solid #d9383a;
+}
+
+.card-btn-delete:hover {
+  background-color: #d9383a;
+  color: #ffffff;
+}
+
+.card-btn-action:active {
+  transform: scale(0.95);
+}
