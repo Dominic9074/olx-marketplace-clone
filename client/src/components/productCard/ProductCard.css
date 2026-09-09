@@ -1,0 +1,133 @@
+.olx-product-card {
+  width: 100%;
+  max-width: 300px;
+  background-color: #ffffff;
+  border: 1px solid #d8dfe0;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.olx-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 47, 52, 0.12);
+  border-color: #002f34;
+}
+
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background-color: #f7f8f9;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.olx-product-card:hover .card-image {
+  transform: scale(1.03);
+}
+
+.card-category-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: rgba(0, 47, 52, 0.85);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  gap: 12px;
+}
+
+.card-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-price {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #002f34;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #002f34;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-description {
+  margin: 0;
+  font-size: 0.825rem;
+  color: #6c8184;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #f0f2f3;
+}
+
+.card-date {
+  font-size: 0.75rem;
+  color: #7f9799;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.card-cart-btn {
+  background-color: #002f34;
+  color: #ffffff;
+  border: 2px solid #002f34;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-cart-btn:hover {
+  background-color: #ffffff;
+  color: #002f34;
+  border-color: #23e5db;
+}
+
+.card-cart-btn:active {
+  transform: scale(0.96);
+}
