@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { createProduct } from "../features/product/productThunk";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/spinloader/LoadingSpinner";
+import { useState } from "react";
 
 interface SellProductFormInterface{
     title: string;
@@ -20,10 +21,13 @@ export default function AddEditProduct() {
     const navigate=useNavigate()
     const {register,handleSubmit,formState:{errors}}=useForm<SellProductFormInterface>()
     const dispatch=useAppDispatch();
-    const {loading,error}=useAppSelector(state=>state.product)
+    const {error}=useAppSelector(state=>state.product)
+
+    let [isUploading,setIsUploading]=useState<boolean>(false)
 
     const handleAddEditProduct=async (data:SellProductFormInterface)=>{
         try{
+            setIsUploading(true)
             const file=data.image[0];
 
             const imageUrl=await uploadImage(file);
@@ -46,6 +50,8 @@ export default function AddEditProduct() {
           if(error instanceof Error){
             toast.error(error.message)
           }
+        }finally{
+          setIsUploading(false)
         }
     }
 
@@ -55,7 +61,7 @@ export default function AddEditProduct() {
 
   return (
     <div className="sell-page-wrapper">
-      {loading && (
+      {isUploading && (
         <LoadingSpinner
           fullScreen
           size="medium"
