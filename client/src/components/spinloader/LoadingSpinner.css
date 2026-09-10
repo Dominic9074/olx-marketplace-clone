@@ -1,75 +1,70 @@
-/* Container wrappers */
+/* Normal in-flow spinner wrapper (for inside containers) */
 .spinner-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   width: 100%;
+  min-height: 200px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background-color: rgba(247, 248, 249, 0.45);
   box-sizing: border-box;
 }
 
+/* Full-screen blurred backdrop overlay */
 .spinner-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(247, 248, 249, 0.75);
-  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(247, 248, 249, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 9999;
 }
 
+/* Spinner container */
 .spinner-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
 }
 
-/* Spinner base element */
+/* Spinner ring */
 .spinner-ring {
   border-radius: 50%;
   border: 3px solid #e2e8f0;
-  border-top-color: #002f34; /* OLX deep teal */
-  border-right-color: #23e5db; /* OLX cyan accent */
+  border-top-color: #002f34;
+  border-right-color: #23e5db;
   animation: spin 0.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Size variations */
 .spinner-content.small .spinner-ring {
-  width: 20px;
-  height: 20px;
-  border-width: 2px;
+  width: 24px;
+  height: 24px;
+  border-width: 2.5px;
 }
 
 .spinner-content.medium .spinner-ring {
-  width: 38px;
-  height: 38px;
-  border-width: 3.5px;
+  width: 44px;
+  height: 44px;
+  border-width: 4px;
 }
 
 .spinner-content.large .spinner-ring {
-  width: 56px;
-  height: 56px;
-  border-width: 4.5px;
+  width: 64px;
+  height: 64px;
+  border-width: 5px;
 }
 
-/* Message typography */
-.spinner-message {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #002f34;
-  letter-spacing: 0.2px;
-}
-
-/* Smooth rotational keyframes */
+/* Rotation keyframes */
 @keyframes spin {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }

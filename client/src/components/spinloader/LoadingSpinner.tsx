@@ -1,21 +1,17 @@
-
 import "./LoadingSpinner.css";
 
 interface LoadingSpinnerProps {
   size?: "small" | "medium" | "large";
-  message?: string;
   fullScreen?: boolean;
 }
 
 export default function LoadingSpinner({
   size = "medium",
-  message,
-  fullScreen = false,
+  fullScreen = true,
 }: LoadingSpinnerProps) {
   const content = (
     <div className={`spinner-content ${size}`}>
       <div className="spinner-ring" />
-      {message && <p className="spinner-message">{message}</p>}
     </div>
   );
 
