@@ -46,7 +46,10 @@ export default function Home(){
                 <LoadingSpinner/>
             ) : products && products.length > 0 ? (
                 <div className="product-grid">
-                <ProductCard />
+                {products.map((product)=>
+                <ProductCard title={product.title} description={product.description} imageUrl={product.imageUrl}
+                price={product.price} createdAt={product.createdAt} category={product.category} />
+                )}
                 </div>
             ) : (
                 <h2>No Product Listed</h2>

@@ -46,7 +46,7 @@ const productSchema = new Schema<ProductInterface>({
         type:Boolean,
         default:false
     }
-})
+},{timestamps:true})
 
 
 const Product=model<ProductInterface>('Product',productSchema)
