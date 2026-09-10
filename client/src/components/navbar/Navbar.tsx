@@ -1,15 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/hooks";
 import "./Navbar.css";
 
 export default function Navbar() {
 
   const {isAuthenticated}=useAppSelector(state=>state.auth)
+  const navigate=useNavigate()
 
   return (
     <nav className="olx-navbar">
       <div className="navbar-container">
         {/* Left: OLX Logo */}
-        <div className="navbar-logo">
+        <div className="navbar-logo" onClick={()=>navigate('/')} >
           <h2>OLX</h2>
         </div>
 
@@ -33,7 +35,7 @@ export default function Navbar() {
 
           {/* Login */}
           {isAuthenticated ? (
-            <button className="nav-item-btn" >
+            <button className="nav-item-btn"  >
               <svg
                 className="nav-icon"
                 viewBox="0 0 24 24"
@@ -50,7 +52,7 @@ export default function Navbar() {
               <span className="nav-label">Logout</span>
             </button>
           ) : (
-            <button className="nav-item-btn">
+            <button className="nav-item-btn" onClick={()=>navigate('/login')} >
               <svg
                 className="nav-icon"
                 viewBox="0 0 24 24"
@@ -68,7 +70,7 @@ export default function Navbar() {
           )}
 
           {/* Sell Button with Multi-Color Border */}
-          <button className="sell-btn">
+          <button className="sell-btn" onClick={()=>navigate('/sell')} >
             <span className="sell-icon">+</span>
             <span className="sell-text">SELL</span>
           </button>

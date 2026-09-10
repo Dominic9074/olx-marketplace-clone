@@ -17,7 +17,7 @@ export function SalesList(){
 
             {/* Product Grid Area */}
             <div className="my-products-grid">
-                <ProductCard />
+                <ProductCard isSeller={true} />
             </div>
             </div>
         </>

@@ -14,7 +14,7 @@ interface SignUpFormInterface{
 
 export default function Signup() {
 
-    const {register,handleSubmit,formState:{errors}}=useForm<SignUpFormInterface>()
+    const {register,handleSubmit,watch,formState:{errors}}=useForm<SignUpFormInterface>()
 
     const {loading,error}=useAppSelector(state=>state.auth);
     const dispatch=useAppDispatch()
@@ -93,7 +93,7 @@ export default function Signup() {
               placeholder="Confirm your password"
               {...register('confirmPassword',{
                 required:'confirm Password is required',
-                minLength:{value:6,message:'at least 6 character are required'}
+                validate:(value)=>value===watch('password') || 'Password Does Not Match'
               })}
             />
             {errors.confirmPassword && <p style={{ color: "red",margin:0 }}>{errors.confirmPassword.message}</p>}

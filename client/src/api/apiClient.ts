@@ -10,12 +10,16 @@ const apiClient=axios.create({
 })
 
 export const setupInterceptors=(store:Store<RootState>)=>{
+    console.log('setup intreceptor running')
     apiClient.interceptors.request.use(
     (config)=>{
         const token=store.getState().auth.token;
 
         if(token){
-            config.headers.Authorization=`Bearer ${token}`
+           config.headers.set(
+                "Authorization",
+                `Bearer ${token}`
+            );
         }
         return config;
     },
@@ -24,5 +28,6 @@ export const setupInterceptors=(store:Store<RootState>)=>{
     }
 )
 }
+
 
 export default apiClient;

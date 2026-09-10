@@ -4,6 +4,7 @@ import { loginUser, registerUser } from "./authThunk";
 import { getStoredAuth } from "./authStorage";
 
 const storedAuth=getStoredAuth();
+console.log('storedAuth:',storedAuth)
 const initialState : AuthState={
     user:storedAuth?.user ??null ,
     token:storedAuth?.token ??null,
@@ -46,7 +47,7 @@ const authSlice=createSlice({
                 state.isAuthenticated=true;
                 state.error=null;
                 //localstorage token save
-                saveAuthToken(action.payload.user,action.payload.token ?? null)
+                saveAuthToken(action.payload.user,action.payload.token ??null )
             })
             .addCase(loginUser.rejected,(state,action)=>{
                 state.error=action.payload ?? 'Login Failed'

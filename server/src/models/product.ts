@@ -32,6 +32,16 @@ const productSchema = new Schema<ProductInterface>({
         type:String,
         required:true,
     },
+    category:{
+        type:String,
+        required:true,
+        trim:true
+    },
+    imageUrl:{
+        type:String,
+        required:true,
+        trim:true
+    },
     isSold:{
         type:Boolean,
         default:false

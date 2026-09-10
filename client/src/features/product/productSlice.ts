@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Product } from "./productType";
-import { getProducts } from "./productThunk";
+import { createProduct, getProducts } from "./productThunk";
 
 interface initialStateInterface{
     products:Product[]|null;
@@ -33,6 +33,20 @@ const productSlice=createSlice({
             .addCase(getProducts.rejected,(state,action)=>{
                 state.loading=false,
                 state.error=action.payload ?? 'Failed to Fetch Products';
+            })
+            //createProduct
+            .addCase(createProduct.pending,(state)=>{
+                state.loading=true,
+                state.error=null;
+            })
+            .addCase(createProduct.fulfilled,(state,action)=>{
+                state.loading=false;
+                state.products?.unshift(action.payload);
+                state.error=null;
+            })
+            .addCase(createProduct.rejected,(state,action)=>{
+                state.loading=false,
+                state.error=action.payload ?? 'Failed to create Product'
             })
     }
 })
