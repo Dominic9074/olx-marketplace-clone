@@ -36,7 +36,8 @@ export const getProductsController=async (req:Request,res:Response)=>{
 
      res.status(200).json({
         success:true,
-        message:'Products fetched Successfully'
+        message:'Products fetched Successfully',
+        products
      })
 
    }catch(error){

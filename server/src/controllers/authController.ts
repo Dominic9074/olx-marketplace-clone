@@ -30,12 +30,13 @@ export const login=async (req:Request,res:Response):Promise<void>=>{
     try{
         const {email,password}=req.body;
 
-        const user=await loginUser({email,password});
+        const {user,token}=await loginUser({email,password});
 
         res.status(200).json({
             success:true,
             message:'User LoggedIn Successfully',
-            user
+            user,
+            token
         })
 
     }catch(error){

@@ -19,6 +19,7 @@ export const authenticate=(req:Request,res:Response,next:NextFunction)=>{
             success: false,
             message: "Authentication token is required",
         });
+        console.log('run auth')
         return;
     }
 
