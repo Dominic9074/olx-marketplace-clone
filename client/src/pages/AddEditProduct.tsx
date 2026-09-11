@@ -23,7 +23,22 @@ export default function AddEditProduct() {
     const dispatch=useAppDispatch();
     const {error}=useAppSelector(state=>state.product)
 
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+
     let [isUploading,setIsUploading]=useState<boolean>(false)
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+
+      if (!file) {
+        setImagePreview(null);
+        return;
+      }
+
+      const previewUrl = URL.createObjectURL(file);
+
+      setImagePreview(previewUrl);
+    };
 
     const handleAddEditProduct=async (data:SellProductFormInterface)=>{
         try{
@@ -176,28 +191,62 @@ export default function AddEditProduct() {
             <div className="form-group">
               <label className="form-label">Upload Product Photo</label>
               <label className="image-upload-box">
-                <input type="file" accept="image/*" className="hidden-file-input" {...register('image',{
-                    required:'Image is Required'
-                })} />
-                <div className="upload-box-content">
-                  <div className="upload-icon-wrapper">
-                    <svg
-                      className="camera-icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                      <circle cx="12" cy="13" r="4" />
-                    </svg>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden-file-input"
+                  {...register("image", {
+                    required: "Image is Required",
+                    onChange: handleImageChange,
+                  })}
+                />
+
+                {imagePreview ? (
+                  <div className="image-preview-container">
+                    <img
+                      src={imagePreview}
+                      alt="Product preview"
+                      className="image-preview"
+                    />
+
+                    <div className="image-preview-overlay">
+                      <span>Change Photo</span>
+                    </div>
                   </div>
-                  <span className="upload-primary-text">Add Cover Photo</span>
-                  <span className="upload-secondary-text">Click or drag & drop</span>
-                  <span className="upload-file-types">Supports JPG, PNG, WEBP up to 5MB</span>
-                </div>
+                ) : (
+                  <div className="upload-box-content">
+
+                    <div className="upload-icon-wrapper">
+                      <svg
+                        className="camera-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                        <circle cx="12" cy="13" r="4" />
+                      </svg>
+                    </div>
+
+                    <span className="upload-primary-text">
+                      Add Cover Photo
+                    </span>
+
+                    <span className="upload-secondary-text">
+                      Click or drag & drop
+                    </span>
+
+                    <span className="upload-file-types">
+                      Supports JPG, PNG, WEBP up to 5MB
+                    </span>
+
+                  </div>
+                )}
+
               </label>
               {errors.image && <p style={{ color: "red",margin:0 }}>{errors.image.message}</p>}
             </div>
