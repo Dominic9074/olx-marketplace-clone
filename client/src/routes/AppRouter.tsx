@@ -5,13 +5,18 @@ import Signup from "../pages/Signup";
 import { SalesList } from "../pages/SalesList";
 import AddEditProduct from "../pages/AddEditProduct";
 import ProtectedRoute from "./ProtectedRouter";
+import PublicRoute from "./PublicRoute";
 
 export default function AppRouter(){
    return(
         <Routes>
+            
             <Route path='/' element={<Home/>} />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/signup' element={<Signup/>} />
+            
+            <Route element={<PublicRoute/>} >
+                <Route path='/login' element={<Login/>} />
+                <Route path='/signup' element={<Signup/>} />
+            </Route>
             
             {/*protected route*/}
 
