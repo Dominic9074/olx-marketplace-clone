@@ -1,5 +1,6 @@
 import { createProduct, getProducts } from "../services/productService";
 import { Request,Response } from "express";
+import productSchema from "../schemas/productSchema";
 
 export const createProductController=async (req:Request,res:Response)=>{
    try{
@@ -11,6 +12,16 @@ export const createProductController=async (req:Request,res:Response)=>{
             message:'Authentication Required'
         });
         return;
+     }
+
+     const result=productSchema.safeParse(req.body)
+
+     if(!result.success){
+         return res.status(400).json({
+            success:false,
+            message:'validation Failed',
+            error:result.error.issues 
+         })
      }
 
      const product=await createProduct({title,description,price,category,imageUrl,sellerId:req.userId});

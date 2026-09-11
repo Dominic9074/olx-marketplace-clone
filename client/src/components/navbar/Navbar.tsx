@@ -1,11 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import "./Navbar.css";
+import { logout } from "../../features/auth/authSlice";
 
 export default function Navbar() {
 
   const {isAuthenticated}=useAppSelector(state=>state.auth)
   const navigate=useNavigate()
+  const dispatch=useAppDispatch()
+
+  const handleLogout=()=>{
+    dispatch(logout())
+    navigate('/login')
+  }
 
   return (
     <nav className="olx-navbar">
@@ -35,7 +42,7 @@ export default function Navbar() {
 
           {/* Login */}
           {isAuthenticated ? (
-            <button className="nav-item-btn"  >
+            <button className="nav-item-btn" onClick={handleLogout}  >
               <svg
                 className="nav-icon"
                 viewBox="0 0 24 24"
