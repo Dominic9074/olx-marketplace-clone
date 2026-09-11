@@ -1,4 +1,3 @@
-import { success } from "zod";
 import { loginSchema, signUpSchema } from "../schemas/authSchema";
 import { registerUser,loginUser } from "../services/authService";
 import type { Request,Response } from "express";
