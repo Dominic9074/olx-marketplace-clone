@@ -48,7 +48,7 @@ export function SalesList(){
                 )}
                 {filteredProduct && filteredProduct.map((product)=>
                    <ProductCard title={product.title} description={product.description} imageUrl={product.imageUrl}
-                    price={product.price} createdAt={product.createdAt} category={product.category} isSeller={true} />
+                    price={product.price} createdAt={product.createdAt} category={product.category} isSeller={true} id={product._id} />
                    )}
             </div>
             </div>

@@ -23,6 +23,7 @@ export default function AppRouter(){
             <Route element={<ProtectedRoute/>} >
                 <Route path='/sell' element={<SalesList/>} />
                 <Route path='/sell/product' element={<AddEditProduct />} />
+                <Route path='/editProduct/:id' element={<AddEditProduct />} />
             </Route>
 
 

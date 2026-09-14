@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./AddEditProduct.css";
 import { useForm } from "react-hook-form";
 import { uploadImage } from "../api/cloudinary";
@@ -22,6 +22,8 @@ export default function AddEditProduct() {
     const {register,handleSubmit,formState:{errors}}=useForm<SellProductFormInterface>()
     const dispatch=useAppDispatch();
     const {error}=useAppSelector(state=>state.product)
+
+    const {id}=useParams<{id:string}>()
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 

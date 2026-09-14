@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./ProductCard.css";
 
 interface ProductCardProps{
@@ -7,16 +8,19 @@ interface ProductCardProps{
     category:string,
     imageUrl:string,
     price:number,
-    createdAt:string
+    createdAt:string,
+    id?:string
 }
 
-export default function ProductCard({isSeller,title,description,price,imageUrl,createdAt,category}:ProductCardProps) {
+export default function ProductCard({id,isSeller,title,description,price,imageUrl,createdAt,category}:ProductCardProps) {
 
    const formattedDate = new Date(createdAt).toLocaleDateString("en-IN", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         });
+
+        const navigate=useNavigate();
 
   return (
     <article className="olx-product-card">
@@ -42,7 +46,7 @@ export default function ProductCard({isSeller,title,description,price,imageUrl,c
           <span className="card-date">{formattedDate}</span>
           {isSeller ? (<div className="card-actions-seller">
                 <button type="button" className="card-btn-action card-btn-edit"
-                    onClick={(e) => {e.stopPropagation()}}> Edit</button>
+                    onClick={()=>navigate(`/editProduct/:${id}`)} > Edit</button>
                 <button type="button" className="card-btn-action card-btn-delete"onClick={(e) => { e.stopPropagation(); }} >
                     Delete</button>
             </div>
