@@ -1,4 +1,4 @@
-import { createProduct, getProducts } from "../services/productService";
+import { createProduct, getProducts, updateProduct } from "../services/productService";
 import { Request,Response } from "express";
 import productSchema from "../schemas/productSchema";
 
@@ -61,3 +61,42 @@ export const getProductsController=async (req:Request,res:Response)=>{
 
 }
 
+
+export const updateProductController=async (req:Request,res:Response)=>{
+   try{
+
+      if(!req.userId){
+         res.status(401).json({
+            success:false,
+            message:'authentication required'
+         })
+         return
+      }
+
+      const {id}=req.params;
+
+      const result=productSchema.safeParse(req.body)
+
+      if(!result.success){
+         res.status(400).json({
+            success:false,
+            message:'validation failed'
+         })
+         return;
+      }
+
+      const product=await updateProduct({productId:id as string,...req.body},req.userId);
+
+      res.status(200).json({
+         success:true,
+         message:'product updated successfully',
+         product
+      })
+
+   }catch(error){
+      res.status(400).json({
+         success:"false",
+         message:error instanceof Error ? error.message :'failed to update product'
+      })
+   }
+}
