@@ -46,6 +46,16 @@ export const updateProduct=async ({productId,title,description,price,sellerId,ca
 
 }
 
+//Delete product by id
+export const deleteProductById=async (productId:string,sellerId:string)=>{
+    const product=await Product.findOneAndDelete({_id:productId,sellerId});
 
+    if(!product){
+        throw new Error('Product Not Found')
+    }
+
+    return product;
+
+}
 
 

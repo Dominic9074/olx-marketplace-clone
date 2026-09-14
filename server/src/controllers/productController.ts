@@ -1,4 +1,4 @@
-import { createProduct, getProducts, updateProduct } from "../services/productService";
+import { createProduct, deleteProductById, getProducts, updateProduct } from "../services/productService";
 import { Request,Response } from "express";
 import productSchema from "../schemas/productSchema";
 
@@ -98,5 +98,38 @@ export const updateProductController=async (req:Request,res:Response)=>{
          success:"false",
          message:error instanceof Error ? error.message :'failed to update product'
       })
+   }
+}
+
+
+//delete product
+
+export const deleteProductController=async (req:Request,res:Response)=>{
+   try{
+
+      if(!req.userId){
+         res.status(400).json({
+            success:false,
+            message:'Authentication Required'
+         })
+         return;
+      }
+
+      const {id}=req.params;
+
+      await deleteProductById(id as string,req.userId);
+
+      res.status(200).json({
+         success:false,
+         message:'Product Deleted Successfully'
+      })
+
+
+   }catch(error){
+      res.status(400).json({
+         success:false,
+         message:error instanceof Error ? error.message :'Failed To delete Product'
+      })
+
    }
 }
