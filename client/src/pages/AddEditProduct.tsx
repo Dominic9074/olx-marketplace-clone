@@ -3,10 +3,10 @@ import "./AddEditProduct.css";
 import { useForm } from "react-hook-form";
 import { uploadImage } from "../api/cloudinary";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { createProduct } from "../features/product/productThunk";
+import { createProduct, getProductById } from "../features/product/productThunk";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/spinloader/LoadingSpinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SellProductFormInterface{
     title: string;
@@ -19,11 +19,29 @@ interface SellProductFormInterface{
 export default function AddEditProduct() {
 
     const navigate=useNavigate()
-    const {register,handleSubmit,formState:{errors}}=useForm<SellProductFormInterface>()
+    const {register,handleSubmit,reset,formState:{errors}}=useForm<SellProductFormInterface>()
     const dispatch=useAppDispatch();
-    const {error}=useAppSelector(state=>state.product)
+    const {product,loading,error}=useAppSelector(state=>state.product)
+    
 
     const {id}=useParams<{id:string}>()
+
+    //useEffect to fetch product 
+    useEffect(()=>{
+      if(id){
+        dispatch(getProductById(id))
+      }
+
+      if(product){
+          reset({
+                  title: product.title,
+                  description: product.description,
+                  price: product.price,
+                  category: product.category,
+              });
+          }
+
+    },[id,product,dispatch,reset])
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -78,7 +96,7 @@ export default function AddEditProduct() {
 
   return (
     <div className="sell-page-wrapper">
-      {isUploading && (
+      {isUploading || loading && (
         <LoadingSpinner
           fullScreen
           size="medium"
