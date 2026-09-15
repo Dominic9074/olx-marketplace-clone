@@ -58,7 +58,7 @@ export const getProductById=createAsyncThunk<Product,string,{rejectValue:string}
     '/getProductById',
     async (productId,{rejectWithValue})=>{
       try{
-          const response =await apiClient.get(`/products/:${productId}`)
+          const response =await apiClient.get(`/products/${productId}`)
 
           return response.data.product
       }catch(error:any){

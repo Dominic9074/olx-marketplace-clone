@@ -46,7 +46,7 @@ export default function ProductCard({id,isSeller,title,description,price,imageUr
           <span className="card-date">{formattedDate}</span>
           {isSeller ? (<div className="card-actions-seller">
                 <button type="button" className="card-btn-action card-btn-edit"
-                    onClick={()=>navigate(`/editProduct/:${id}`)} > Edit</button>
+                    onClick={()=>navigate(`/editProduct/${id}`)} > Edit</button>
                 <button type="button" className="card-btn-action card-btn-delete"onClick={(e) => { e.stopPropagation(); }} >
                     Delete</button>
             </div>

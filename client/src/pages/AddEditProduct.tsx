@@ -22,6 +22,7 @@ export default function AddEditProduct() {
     const {register,handleSubmit,reset,formState:{errors}}=useForm<SellProductFormInterface>()
     const dispatch=useAppDispatch();
     const {product,loading,error}=useAppSelector(state=>state.product)
+    const [isEditMode,setIsEditMode]=useState<boolean>(false)
     
 
     const {id}=useParams<{id:string}>()
@@ -30,18 +31,20 @@ export default function AddEditProduct() {
     useEffect(()=>{
       if(id){
         dispatch(getProductById(id))
+        setIsEditMode(true)
       }
 
-      if(product){
+      if(product && id){
           reset({
                   title: product.title,
                   description: product.description,
                   price: product.price,
                   category: product.category,
               });
+              setImagePreview(product.imageUrl);
           }
 
-    },[id,product,dispatch,reset])
+    },[id,dispatch,reset])
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -211,63 +214,48 @@ export default function AddEditProduct() {
             <div className="form-group">
               <label className="form-label">Upload Product Photo</label>
               <label className="image-upload-box">
-
-                <input
+              <input
                   type="file"
                   accept="image/*"
                   className="hidden-file-input"
                   {...register("image", {
-                    required: "Image is Required",
-                    onChange: handleImageChange,
+                      required: !isEditMode ? "Image is Required" : false
                   })}
-                />
+                  onChange={handleImageChange}
+              />
 
-                {imagePreview ? (
+              {imagePreview ? (
                   <div className="image-preview-container">
-                    <img
-                      src={imagePreview}
-                      alt="Product preview"
-                      className="image-preview"
-                    />
+                      <img
+                          src={imagePreview}
+                          alt="Product preview"
+                          className="product-image-preview"
+                      />
 
-                    <div className="image-preview-overlay">
-                      <span>Change Photo</span>
-                    </div>
+                      <div className="change-image-overlay">
+                          <span>Change Image</span>
+                      </div>
                   </div>
-                ) : (
+              ) : (
                   <div className="upload-box-content">
+                      <div className="upload-icon-wrapper">
+                          {/* camera SVG */}
+                      </div>
 
-                    <div className="upload-icon-wrapper">
-                      <svg
-                        className="camera-icon"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                        <circle cx="12" cy="13" r="4" />
-                      </svg>
-                    </div>
+                      <span className="upload-primary-text">
+                          Add Cover Photo
+                      </span>
 
-                    <span className="upload-primary-text">
-                      Add Cover Photo
-                    </span>
+                      <span className="upload-secondary-text">
+                          Click or drag & drop
+                      </span>
 
-                    <span className="upload-secondary-text">
-                      Click or drag & drop
-                    </span>
-
-                    <span className="upload-file-types">
-                      Supports JPG, PNG, WEBP up to 5MB
-                    </span>
-
+                      <span className="upload-file-types">
+                          Supports JPG, PNG, WEBP up to 5MB
+                      </span>
                   </div>
-                )}
-
-              </label>
+              )}
+          </label>
               {errors.image && <p style={{ color: "red",margin:0 }}>{errors.image.message}</p>}
             </div>
 
