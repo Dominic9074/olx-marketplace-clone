@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Product } from "./productType";
-import { createProduct, getProductById, getProducts } from "./productThunk";
+import { createProduct, getProductById, getProducts, updateProduct } from "./productThunk";
 
 interface initialStateInterface{
     products:Product[]|null;
@@ -20,7 +20,12 @@ const initialState:initialStateInterface={
 const productSlice=createSlice({
     name:'product',
     initialState,
-    reducers:{},
+    reducers:{
+        clearProduct: (state) => {
+            state.product = null;
+            state.error = null;
+        }
+    },
     extraReducers:(builder)=>{
         builder
             .addCase(getProducts.pending,(state)=>{
@@ -54,6 +59,7 @@ const productSlice=createSlice({
             .addCase(getProductById.pending,(state)=>{
                 state.loading=true,
                 state.error=null;
+                state.product=null
             })
             .addCase(getProductById.fulfilled,(state,action)=>{
                 state.loading=false,
@@ -63,10 +69,28 @@ const productSlice=createSlice({
             .addCase(getProductById.rejected,(state,action)=>{
                 state.loading=false;
                 state.error=action.payload ?? 'Failed to Fetch Product'
+                state.product=null
             })
+            //edit product 
+            .addCase(updateProduct.pending, (state) => {
+                    state.loading = true;
+                    state.error = null;
+                })
+
+                .addCase(updateProduct.fulfilled, (state, action) => {
+                    state.loading = false;
+                    state.product = action.payload.product;
+                    state.error = null;
+                })
+
+                .addCase(updateProduct.rejected, (state, action) => {
+                    state.loading = false;
+                    state.error = action.payload ?? "Failed to update product";
+                })
     }
 })
 
 
 
 export default productSlice.reducer;
+export const { clearProduct } = productSlice.actions;

@@ -9,6 +9,12 @@ interface ProductResponse{
     products:Product[];
 }
 
+interface editProductResponse{
+    success:boolean,
+    message:string,
+    product:Product;
+}
+
 interface createProductResponse{
     success:boolean,
     message:string,
@@ -21,6 +27,11 @@ interface createProductData{
     price: number;
     category: string;
     imageUrl: string;
+}
+
+interface updateProductData extends createProductData{
+    id:string,
+    sellerId:string
 }
 
 //get all products
@@ -67,3 +78,17 @@ export const getProductById=createAsyncThunk<Product,string,{rejectValue:string}
     }
 )
 
+export const updateProduct=createAsyncThunk<editProductResponse,updateProductData,{rejectValue:string}>(
+    '/updateProduct',
+    async (productData,{rejectWithValue})=>{
+        try{
+            const {id,...data}=productData
+            const response=await apiClient.put<editProductResponse>(`/editProduct/${id}`,data)
+
+            return response.data
+
+        }catch(error:any){
+            return rejectWithValue(error.response?.data?.message ||"Failed To update product")
+        }
+    }
+)

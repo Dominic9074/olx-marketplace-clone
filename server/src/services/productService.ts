@@ -58,4 +58,13 @@ export const deleteProductById=async (productId:string,sellerId:string)=>{
 
 }
 
+//get product by id 
+export const getProductById=async (id:string)=>{
+    const product=await Product.findById(id);
 
+    if(!product){
+        throw new Error('Product Not Found')
+    }
+
+    return product
+}

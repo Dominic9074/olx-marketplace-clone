@@ -1,6 +1,7 @@
-import { createProduct, deleteProductById, getProducts, updateProduct } from "../services/productService";
+import { createProduct, deleteProductById, getProductById, getProducts, updateProduct } from "../services/productService";
 import { Request,Response } from "express";
 import productSchema from "../schemas/productSchema";
+import { success } from "zod";
 
 export const createProductController=async (req:Request,res:Response)=>{
    try{
@@ -76,6 +77,7 @@ export const updateProductController=async (req:Request,res:Response)=>{
       const {id}=req.params;
 
       const result=productSchema.safeParse(req.body)
+      console.log(result)
 
       if(!result.success){
          res.status(400).json({
@@ -96,7 +98,7 @@ export const updateProductController=async (req:Request,res:Response)=>{
    }catch(error){
       res.status(400).json({
          success:"false",
-         message:error instanceof Error ? error.message :'failed to update product'
+         message:error instanceof Error ? error.message :'Failed To Update Product'
       })
    }
 }
@@ -132,4 +134,38 @@ export const deleteProductController=async (req:Request,res:Response)=>{
       })
 
    }
+}
+
+//get product by id 
+export const getProductByIdController=async (req:Request,res:Response)=>{
+   try{
+      const {id}=req.params;
+
+      if(!id){
+         res.status(400).json({
+            success:false,
+            message:'Product Id Is Required'
+         })
+         return
+      }
+      const product=await getProductById(id as string);
+
+      if(!product){
+         return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+      }
+
+       return res.status(200).json({
+            success: true,
+            product
+        });
+   }catch(error){
+      return res.status(400).json({
+            success: false,
+            message:error instanceof Error ? error.message : "Failed to fetch product"
+        });
+   }
+
 }

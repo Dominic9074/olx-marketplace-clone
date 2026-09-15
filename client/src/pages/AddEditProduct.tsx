@@ -3,10 +3,11 @@ import "./AddEditProduct.css";
 import { useForm } from "react-hook-form";
 import { uploadImage } from "../api/cloudinary";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { createProduct, getProductById } from "../features/product/productThunk";
+import { createProduct, getProductById, updateProduct } from "../features/product/productThunk";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../components/spinloader/LoadingSpinner";
 import { useEffect, useState } from "react";
+import { clearProduct } from "../features/product/productSlice";
 
 interface SellProductFormInterface{
     title: string;
@@ -34,6 +35,13 @@ export default function AddEditProduct() {
         setIsEditMode(true)
       }
 
+      return () => {
+              dispatch(clearProduct());
+          };
+
+    },[id,dispatch,reset])
+
+    useEffect(()=>{
       if(product && id){
           reset({
                   title: product.title,
@@ -43,8 +51,7 @@ export default function AddEditProduct() {
               });
               setImagePreview(product.imageUrl);
           }
-
-    },[id,dispatch,reset])
+    },[product,id,reset])
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -66,24 +73,46 @@ export default function AddEditProduct() {
     const handleAddEditProduct=async (data:SellProductFormInterface)=>{
         try{
             setIsUploading(true)
-            const file=data.image[0];
+            let imageUrl = imagePreview as string;
 
-            const imageUrl=await uploadImage(file);
-            console.log(imageUrl)
-
-            const result=await dispatch(createProduct({
-              title:data.title,
-              description:data.description,
-              price:data.price,
-              category:data.category,
-              imageUrl
-            }))
-
-            if(createProduct.fulfilled.match(result)){
-              toast.success('Advertisement Added Successfully');
-              navigate('/sell')
+            // Upload only if user selected a new image
+            if (data.image && data.image.length > 0) {
+                const file = data.image[0];
+                imageUrl = await uploadImage(file);
             }
+            
+            if(id){
+              const result = await dispatch(
+                  updateProduct({
+                      id,
+                      title: data.title,
+                      description: data.description,
+                      price: data.price,
+                      category: data.category,
+                      sellerId:product?.sellerId as string,
+                      imageUrl
+                  })
+              );
 
+              if(updateProduct.fulfilled.match(result)){
+                toast.success('Product updated Successfully');
+                navigate('/sell');
+              }
+
+            }else{
+                const result=await dispatch(createProduct({
+                title:data.title,
+                description:data.description,
+                price:data.price,
+                category:data.category,
+                imageUrl
+              }))
+
+              if(createProduct.fulfilled.match(result)){
+                toast.success('Advertisement Added Successfully');
+                navigate('/sell')
+              }
+            }
         }catch(error){
           if(error instanceof Error){
             toast.error(error.message)
@@ -99,7 +128,7 @@ export default function AddEditProduct() {
 
   return (
     <div className="sell-page-wrapper">
-      {isUploading || loading && (
+      {(isUploading || loading) && (
         <LoadingSpinner
           fullScreen
           size="medium"
@@ -186,7 +215,8 @@ export default function AddEditProduct() {
                     placeholder="0"
                     {...register('price',{
                     required:'price Is Required',
-                    min:{value:10,message:'At Least 2 digit number is required'}
+                    min:{value:10,message:'At Least 2 digit number is required'},
+                    valueAsNumber: true
                 })}
                   />
                 </div>
@@ -276,7 +306,7 @@ export default function AddEditProduct() {
               </div>
 
               <button type="button" className="publish-btn" onClick={handleSubmit(handleAddEditProduct)} >
-                Post Advertisement
+                {isEditMode ? 'Update Advertisement' : 'Post Advertisement'}
               </button>
             </div>
           </div>
