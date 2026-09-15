@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "./ProductCard.css";
+import Swal from "sweetalert2";
+import { deleteProduct } from "../../features/product/productThunk";
+import { useAppDispatch } from "../../hooks/hooks";
+
 
 interface ProductCardProps{
     isSeller?:boolean,
@@ -21,6 +25,35 @@ export default function ProductCard({id,isSeller,title,description,price,imageUr
         });
 
         const navigate=useNavigate();
+        const dispatch=useAppDispatch()
+
+        //handle delete
+        const handleDelete = async (id: string) => {
+          const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to recover this product!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+          });
+
+          if (!result.isConfirmed) {
+            return;
+          }
+
+          const response = await dispatch(deleteProduct(id));
+
+          if (deleteProduct.fulfilled.match(response)) {
+            await Swal.fire({
+              title: "Deleted!",
+              text: "Product has been deleted successfully.",
+              icon: "success",
+            });
+
+            
+          }
+        };
 
   return (
     <article className="olx-product-card">
@@ -47,7 +80,7 @@ export default function ProductCard({id,isSeller,title,description,price,imageUr
           {isSeller ? (<div className="card-actions-seller">
                 <button type="button" className="card-btn-action card-btn-edit"
                     onClick={()=>navigate(`/editProduct/${id}`)} > Edit</button>
-                <button type="button" className="card-btn-action card-btn-delete"onClick={(e) => { e.stopPropagation(); }} >
+                <button type="button" className="card-btn-action card-btn-delete"onClick={() => handleDelete(id as string)} >
                     Delete</button>
             </div>
             ) : (

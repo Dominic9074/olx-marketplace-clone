@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Product } from "./productType";
-import { createProduct, getProductById, getProducts, updateProduct } from "./productThunk";
+import { createProduct, deleteProduct, getProductById, getProducts, updateProduct } from "./productThunk";
 
 interface initialStateInterface{
     products:Product[]|null;
@@ -75,18 +75,36 @@ const productSlice=createSlice({
             .addCase(updateProduct.pending, (state) => {
                     state.loading = true;
                     state.error = null;
-                })
+            })
 
-                .addCase(updateProduct.fulfilled, (state, action) => {
+            .addCase(updateProduct.fulfilled, (state, action) => {
                     state.loading = false;
                     state.product = action.payload.product;
                     state.error = null;
-                })
+            })
 
-                .addCase(updateProduct.rejected, (state, action) => {
+            .addCase(updateProduct.rejected, (state, action) => {
                     state.loading = false;
                     state.error = action.payload ?? "Failed to update product";
-                })
+            })
+                
+            //delete Product
+            .addCase(deleteProduct.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteProduct.fulfilled, (state,action) => {
+                state.loading = false;
+                if (state.products) {
+                    state.products = state.products.filter(
+                        product => product._id !== action.meta.arg
+                    );
+                }
+            })
+            .addCase(deleteProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? "Failed to delete product";
+            })
     }
 })
 

@@ -3,6 +3,7 @@ import type { Product } from "./productType";
 import apiClient from "../../api/apiClient";
 
 
+
 interface ProductResponse{
     success:boolean,
     message:string,
@@ -32,6 +33,11 @@ interface createProductData{
 interface updateProductData extends createProductData{
     id:string,
     sellerId:string
+}
+
+interface apiResponse{
+    success:boolean,
+    message:string
 }
 
 //get all products
@@ -92,3 +98,18 @@ export const updateProduct=createAsyncThunk<editProductResponse,updateProductDat
         }
     }
 )
+
+export const deleteProduct=createAsyncThunk<apiResponse,string,{rejectValue:string}>(
+    '/deleteProduct',
+    async (id,{rejectWithValue})=>{
+        try{
+            const response=await apiClient.delete(`/deleteProduct/${id}`);
+
+            return response.data
+        }catch(error: any){
+            return rejectWithValue(error.response?.data?.message ||"Failed To update product" )
+        }
+    }
+)
+
+

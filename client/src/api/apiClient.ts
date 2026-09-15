@@ -10,7 +10,6 @@ const apiClient=axios.create({
 })
 
 export const setupInterceptors=(store:Store<RootState>)=>{
-    console.log('setup intreceptor running')
     apiClient.interceptors.request.use(
     (config)=>{
         const token=store.getState().auth.token;

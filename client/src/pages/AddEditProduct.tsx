@@ -28,6 +28,10 @@ export default function AddEditProduct() {
 
     const {id}=useParams<{id:string}>()
 
+    const imageRegister = register("image", {
+      required: !isEditMode ? "Image is Required" : false
+    });
+
     //useEffect to fetch product 
     useEffect(()=>{
       if(id){
@@ -49,6 +53,7 @@ export default function AddEditProduct() {
                   price: product.price,
                   category: product.category,
               });
+              console.log(product.imageUrl)
               setImagePreview(product.imageUrl);
           }
     },[product,id,reset])
@@ -73,15 +78,20 @@ export default function AddEditProduct() {
     const handleAddEditProduct=async (data:SellProductFormInterface)=>{
         try{
             setIsUploading(true)
-            let imageUrl = imagePreview as string;
-
-            // Upload only if user selected a new image
-            if (data.image && data.image.length > 0) {
-                const file = data.image[0];
-                imageUrl = await uploadImage(file);
-            }
+            let imageUrl:string
             
             if(id){
+
+              if (data.image && data.image.length > 0) {
+                 const file = data.image[0]; 
+                 imageUrl = await uploadImage(file);
+                } else { 
+                    if (!product?.imageUrl) {
+                      throw new Error("Product image is missing"); 
+                      } 
+                      imageUrl = product.imageUrl;
+                  }
+
               const result = await dispatch(
                   updateProduct({
                       id,
@@ -100,12 +110,21 @@ export default function AddEditProduct() {
               }
 
             }else{
+
+                if (!data.image || data.image.length === 0) {
+                      throw new Error("Please select an image");
+                }
+
+                const file = data.image[0];
+
+                imageUrl = await uploadImage(file);
+
                 const result=await dispatch(createProduct({
-                title:data.title,
-                description:data.description,
-                price:data.price,
-                category:data.category,
-                imageUrl
+                  title:data.title,
+                  description:data.description,
+                  price:data.price,
+                  category:data.category,
+                  imageUrl
               }))
 
               if(createProduct.fulfilled.match(result)){
@@ -251,7 +270,9 @@ export default function AddEditProduct() {
                   {...register("image", {
                       required: !isEditMode ? "Image is Required" : false
                   })}
-                  onChange={handleImageChange}
+                  onChange={(event) => {imageRegister.onChange(event);
+                     handleImageChange(event);
+                   }}
               />
 
               {imagePreview ? (
