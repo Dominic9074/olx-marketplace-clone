@@ -1,8 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { cartState } from "./cartTypes";
-import type { Product } from "../product/productType";
 import { getStoredCart,storeCart } from "./cartStorage";
-
+import type Product from "../../types/productType";
 
 const storedCart=getStoredCart()
 
