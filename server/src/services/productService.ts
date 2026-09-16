@@ -68,3 +68,15 @@ export const getProductById=async (id:string)=>{
 
     return product
 }
+
+
+//complete purchase
+export const completePurchase=async (productIds:string[])=>{
+    const result=await Product.updateMany({
+        _id:{$in:productIds},
+        isSold:false
+    },{
+        $set:{isSold:true},
+    })
+    return result;
+}

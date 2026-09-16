@@ -1,4 +1,4 @@
-import { createProduct, deleteProductById, getProductById, getProducts, updateProduct } from "../services/productService";
+import { completePurchase, createProduct, deleteProductById, getProductById, getProducts, updateProduct } from "../services/productService";
 import { Request,Response } from "express";
 import productSchema from "../schemas/productSchema";
 import { success } from "zod";
@@ -168,4 +168,45 @@ export const getProductByIdController=async (req:Request,res:Response)=>{
         });
    }
 
+}
+
+
+//complete purchase controller 
+export const completePurchaseController=async (req:Request,res:Response)=>{
+   try{
+      if (!req.userId) {
+      res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+      return;
+    }
+
+    const { productIds } = req.body;
+
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+      res.status(400).json({
+        success: false,
+        message: "Product IDs are required",
+      });
+      return;
+    }
+
+    const result = await completePurchase(
+      productIds
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Purchase completed successfully",
+      result,
+    });
+   }catch(error){
+      res.status(400).json({
+         success: false,
+         message: error instanceof Error
+            ? error.message
+            : "Failed to complete purchase",
+      });
+      }
 }
