@@ -25,7 +25,7 @@ export default function Navbar() {
         {/* Right: Actions */}
         <div className="navbar-actions">
           {/* Wishlist */}
-          <button className="nav-item-btn">
+          <button className="nav-item-btn" onClick={()=>navigate('/cart')} >
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"

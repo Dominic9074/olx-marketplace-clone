@@ -6,6 +6,7 @@ import { SalesList } from "../pages/SalesList";
 import AddEditProduct from "../pages/AddEditProduct";
 import ProtectedRoute from "./ProtectedRouter";
 import PublicRoute from "./PublicRoute";
+import CartPage from "../pages/Cart";
 
 export default function AppRouter(){
    return(
@@ -24,6 +25,7 @@ export default function AppRouter(){
                 <Route path='/sell' element={<SalesList/>} />
                 <Route path='/sell/product' element={<AddEditProduct />} />
                 <Route path='/editProduct/:id' element={<AddEditProduct />} />
+                <Route path='/cart' element={<CartPage />} />
             </Route>
 
 
