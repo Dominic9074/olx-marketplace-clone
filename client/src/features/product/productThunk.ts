@@ -4,6 +4,7 @@ import apiClient from "../../api/apiClient";
 
 
 
+
 interface ProductResponse{
     success:boolean,
     message:string,
@@ -83,7 +84,7 @@ export const getProductById=createAsyncThunk<Product,string,{rejectValue:string}
       }
     }
 )
-
+//update product
 export const updateProduct=createAsyncThunk<editProductResponse,updateProductData,{rejectValue:string}>(
     '/updateProduct',
     async (productData,{rejectWithValue})=>{
@@ -98,7 +99,7 @@ export const updateProduct=createAsyncThunk<editProductResponse,updateProductDat
         }
     }
 )
-
+//delete product Thunk
 export const deleteProduct=createAsyncThunk<apiResponse,string,{rejectValue:string}>(
     '/deleteProduct',
     async (id,{rejectWithValue})=>{
@@ -112,4 +113,18 @@ export const deleteProduct=createAsyncThunk<apiResponse,string,{rejectValue:stri
     }
 )
 
+//complete purchase thunk
+export const completePurchase=createAsyncThunk<apiResponse,string[],{rejectValue:string}>(
+    '/completePurchase',
+    async (productIds,{rejectWithValue})=>{
+        try{
+            const response =await apiClient.patch('/product/purchase',{productIds});
 
+            return response.data;
+        }catch(error:any){
+            return rejectWithValue(
+                error.response?.data?.message || "Failed to complete purchase"
+            );
+        }
+    }
+)

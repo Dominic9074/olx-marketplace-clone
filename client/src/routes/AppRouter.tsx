@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRouter";
 import PublicRoute from "./PublicRoute";
 import CartPage from "../pages/Cart";
 import ProductDetailsPage from "../pages/ProductDetails";
+import CheckoutPage from "../pages/CheckOut";
 
 export default function AppRouter(){
    return(
@@ -27,6 +28,7 @@ export default function AppRouter(){
                 <Route path='/sell/product' element={<AddEditProduct />} />
                 <Route path='/editProduct/:id' element={<AddEditProduct />} />
                 <Route path='/cart' element={<CartPage />} />
+                <Route path='/checkout' element={<CheckoutPage />} />
             </Route>
 
                 <Route path='/product/:id' element={<ProductDetailsPage />} />

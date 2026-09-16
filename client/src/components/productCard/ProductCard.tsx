@@ -95,7 +95,7 @@ export default function ProductCard({product,isSeller}:ProductCardProps) {
             <button
                 type="button"
                 className="card-cart-btn"
-                onClick={() => {handleAddToCart(product)}}>
+                onClick={(e) => {e.stopPropagation(); handleAddToCart(product)}}>
                 Add to Cart
             </button>
             )}
