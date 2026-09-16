@@ -3,19 +3,10 @@ import "./Cart.css";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { removeFromCart } from "../features/cart/cartSlice";
 
-interface CartItem {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-}
-
 
 export default function CartPage() {
   const navigate = useNavigate();
   const dispatch=useAppDispatch()
-//   const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART_ITEMS);
 
     const cart=useAppSelector(state=>state.cart)
 

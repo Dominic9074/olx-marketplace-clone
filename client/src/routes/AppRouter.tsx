@@ -7,6 +7,7 @@ import AddEditProduct from "../pages/AddEditProduct";
 import ProtectedRoute from "./ProtectedRouter";
 import PublicRoute from "./PublicRoute";
 import CartPage from "../pages/Cart";
+import ProductDetailsPage from "../pages/ProductDetails";
 
 export default function AppRouter(){
    return(
@@ -27,6 +28,9 @@ export default function AppRouter(){
                 <Route path='/editProduct/:id' element={<AddEditProduct />} />
                 <Route path='/cart' element={<CartPage />} />
             </Route>
+
+                <Route path='/product/:id' element={<ProductDetailsPage />} />
+            
 
 
         </Routes>

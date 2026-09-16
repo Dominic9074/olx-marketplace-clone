@@ -64,7 +64,7 @@ export default function ProductCard({product,isSeller}:ProductCardProps) {
         }
 
   return (
-    <article className="olx-product-card">
+    <article className="olx-product-card" onClick={()=>navigate(`/product/${product._id}`)} >
       <div className="card-image-wrapper">
         <img
           src={product.imageUrl}

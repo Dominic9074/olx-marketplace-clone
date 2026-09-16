@@ -1,0 +1,160 @@
+.product-details-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Back link */
+.details-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #002f34;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.details-back-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.details-back-link:hover {
+  color: #00a49f;
+}
+
+/* Main row layout - no box card, no shadow, no background */
+.details-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* Left Image */
+.details-image-side {
+  flex: 1.2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.details-image-side img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Right Details */
+.details-info-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.details-badge {
+  background-color: #ebf1f2;
+  color: #002f34;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.details-date {
+  font-size: 0.82rem;
+  color: #7b8e90;
+}
+
+.details-title {
+  margin: 0 0 10px 0;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #002f34;
+  line-height: 1.25;
+}
+
+.details-price {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #002f34;
+  margin-bottom: 24px;
+}
+
+.details-description-box {
+  border-top: 1px solid #e2e8ea;
+  padding-top: 16px;
+  margin-bottom: 32px;
+}
+
+.details-description-box h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #002f34;
+}
+
+.details-description-box p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #536466;
+}
+
+/* Add to Cart Button */
+.details-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #002f34;
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  width: 100%;
+}
+
+.details-add-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.details-add-btn:hover {
+  opacity: 0.92;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .details-layout {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .details-image-side img {
+    max-height: 320px;
+  }
+
+  .details-title,
+  .details-price {
+    font-size: 1.5rem;
+  }
+}
