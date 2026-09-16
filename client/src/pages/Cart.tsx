@@ -1,6 +1,7 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { removeFromCart } from "../features/cart/cartSlice";
 
 interface CartItem {
   id: string;
@@ -10,36 +11,23 @@ interface CartItem {
   imageUrl: string;
 }
 
-const INITIAL_CART_ITEMS: CartItem[] = [
-  {
-    id: "1",
-    title: "Hyundai Creta 2020",
-    description:
-      "Hyundai Creta in excellent condition with comfortable interiors, good mileage and complete service history.",
-    price: 1050000,
-    imageUrl:
-      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500&auto=format&fit=crop&q=80",
-  },
-  {
-    id: "2",
-    title: "Mahindra Thar 2022",
-    description:
-      "Mahindra Thar in excellent condition with powerful performance and stylish design. Very well maintained.",
-    price: 1375000,
-    imageUrl:
-      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500&auto=format&fit=crop&q=80",
-  },
-];
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART_ITEMS);
+  const dispatch=useAppDispatch()
+//   const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART_ITEMS);
 
-  const handleRemove = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
+    const cart=useAppSelector(state=>state.cart)
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
+    const handleRemove = (id: string) => {
+        dispatch(removeFromCart(id));
+    };
+
+    const totalPrice = cart.items.reduce(
+        (acc, item) => acc + item.product.price,
+        0
+    );
+
 
   return (
     <div className="cart-page-bg">
@@ -69,7 +57,7 @@ export default function CartPage() {
           <div className="cart-header-title-box">
             <h1 className="cart-heading">My Cart</h1>
             <span className="cart-items-badge">
-              {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+              {cart.items.length} {cart.items.length === 1 ? "item" : "items"}
             </span>
           </div>
         </div>
@@ -77,29 +65,29 @@ export default function CartPage() {
         <div className="cart-main-layout">
           {/* Left Column: Horizontal Item Cards */}
           <div className="cart-items-list">
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="empty-cart-card">Your cart is empty.</div>
             ) : (
-              cartItems.map((item) => (
-                <div key={item.id} className="cart-item-card">
+              cart.items.map((item) => (
+                <div key={item.product._id} className="cart-item-card">
                   <div className="cart-item-img-box">
-                    <img src={item.imageUrl} alt={item.title} />
+                    <img src={item.product.imageUrl} alt={item.product.title} />
                   </div>
 
                   <div className="cart-item-info">
                     <div className="cart-item-text">
-                      <h3 className="cart-item-title">{item.title}</h3>
-                      <p className="cart-item-desc">{item.description}</p>
+                      <h3 className="cart-item-title">{item.product.title}</h3>
+                      <p className="cart-item-desc">{item.product.description}</p>
                     </div>
 
                     <div className="cart-item-bottom">
                       <span className="cart-item-price">
-                        ₹{item.price.toLocaleString("en-IN")}
+                        ₹{item.product.price.toLocaleString("en-IN")}
                       </span>
                       <button
                         type="button"
                         className="cart-remove-btn"
-                        onClick={() => handleRemove(item.id)}
+                        onClick={() => handleRemove(item.product._id)}
                       >
                         Remove
                       </button>
@@ -116,11 +104,11 @@ export default function CartPage() {
               <h2 className="summary-title">Order Summary</h2>
 
               <div className="summary-items-list">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="summary-item-row">
-                    <span className="summary-item-name">{item.title}</span>
+                {cart.items.map((item) => (
+                  <div key={item.product._id} className="summary-item-row">
+                    <span className="summary-item-name">{item.product.title}</span>
                     <span className="summary-item-value">
-                      ₹{item.price.toLocaleString("en-IN")}
+                      ₹{item.product.price.toLocaleString("en-IN")}
                     </span>
                   </div>
                 ))}
@@ -138,7 +126,7 @@ export default function CartPage() {
               <button
                 type="button"
                 className="checkout-btn"
-                disabled={cartItems.length === 0}
+                disabled={cart.items.length === 0}
               >
                 Proceed to Checkout
               </button>

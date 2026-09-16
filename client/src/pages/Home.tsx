@@ -47,8 +47,7 @@ export default function Home(){
             ) : products && products.length > 0 ? (
                 <div className="product-grid">
                 {products.map((product)=>
-                <ProductCard title={product.title} description={product.description} imageUrl={product.imageUrl}
-                price={product.price} createdAt={product.createdAt} category={product.category} />
+                <ProductCard product={product} />
                 )}
                 </div>
             ) : (
