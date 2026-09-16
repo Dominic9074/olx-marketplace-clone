@@ -3,22 +3,20 @@ import "./Cart.css";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { removeFromCart } from "../features/cart/cartSlice";
 
-
 export default function CartPage() {
   const navigate = useNavigate();
-  const dispatch=useAppDispatch()
+  const dispatch = useAppDispatch();
 
-    const cart=useAppSelector(state=>state.cart)
+  const cart = useAppSelector((state) => state.cart);
 
-    const handleRemove = (id: string) => {
-        dispatch(removeFromCart(id));
-    };
+  const handleRemove = (id: string) => {
+    dispatch(removeFromCart(id));
+  };
 
-    const totalPrice = cart.items.reduce(
-        (acc, item) => acc + item.product.price,
-        0
-    );
-
+  const totalPrice = cart.items.reduce(
+    (acc, item) => acc + item.product.price,
+    0,
+  );
 
   return (
     <div className="cart-page-bg">
@@ -68,7 +66,9 @@ export default function CartPage() {
                   <div className="cart-item-info">
                     <div className="cart-item-text">
                       <h3 className="cart-item-title">{item.product.title}</h3>
-                      <p className="cart-item-desc">{item.product.description}</p>
+                      <p className="cart-item-desc">
+                        {item.product.description}
+                      </p>
                     </div>
 
                     <div className="cart-item-bottom">
@@ -97,7 +97,9 @@ export default function CartPage() {
               <div className="summary-items-list">
                 {cart.items.map((item) => (
                   <div key={item.product._id} className="summary-item-row">
-                    <span className="summary-item-name">{item.product.title}</span>
+                    <span className="summary-item-name">
+                      {item.product.title}
+                    </span>
                     <span className="summary-item-value">
                       ₹{item.product.price.toLocaleString("en-IN")}
                     </span>
@@ -118,7 +120,7 @@ export default function CartPage() {
                 type="button"
                 className="checkout-btn"
                 disabled={cart.items.length === 0}
-                onClick={()=>navigate('/checkout')}
+                onClick={() => navigate("/checkout")}
               >
                 Proceed to Checkout
               </button>

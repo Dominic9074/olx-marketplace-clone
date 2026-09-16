@@ -10,33 +10,27 @@ import CartPage from "../pages/Cart";
 import ProductDetailsPage from "../pages/ProductDetails";
 import CheckoutPage from "../pages/CheckOut";
 
-export default function AppRouter(){
-   return(
-        <Routes>
-            
-            <Route path='/' element={<Home/>} />
-            
-            <Route element={<PublicRoute/>} >
-                <Route path='/login' element={<Login/>} />
-                <Route path='/signup' element={<Signup/>} />
-            </Route>
-            
-            {/*protected route*/}
+export default function AppRouter() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
 
-            <Route element={<ProtectedRoute/>} >
-                <Route path='/sell' element={<SalesList/>} />
-                <Route path='/sell/product' element={<AddEditProduct />} />
-                <Route path='/editProduct/:id' element={<AddEditProduct />} />
-                <Route path='/cart' element={<CartPage />} />
-                <Route path='/checkout' element={<CheckoutPage />} />
-            </Route>
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Route>
 
-                <Route path='/product/:id' element={<ProductDetailsPage />} />
-            
+      {/*protected route*/}
 
+      <Route element={<ProtectedRoute />}>
+        <Route path="/sell" element={<SalesList />} />
+        <Route path="/sell/product" element={<AddEditProduct />} />
+        <Route path="/editProduct/:id" element={<AddEditProduct />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+      </Route>
 
-        </Routes>
-   )
+      <Route path="/product/:id" element={<ProductDetailsPage />} />
+    </Routes>
+  );
 }
-
-

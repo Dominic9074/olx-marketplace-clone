@@ -4,31 +4,29 @@ import "./Navbar.css";
 import { logout } from "../../features/auth/authSlice";
 
 export default function Navbar() {
-
-  const {isAuthenticated}=useAppSelector(state=>state.auth)
-  const navigate=useNavigate()
-  const dispatch=useAppDispatch()
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const cartCount = useAppSelector((state) => state.cart.items.length);
 
-  const handleLogout=()=>{
-    dispatch(logout())
-    navigate('/login')
-  }
-
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <nav className="olx-navbar">
       <div className="navbar-container">
         {/* Left: OLX Logo */}
-        <div className="navbar-logo" onClick={()=>navigate('/')} >
+        <div className="navbar-logo" onClick={() => navigate("/")}>
           <h2>OLX</h2>
         </div>
 
         {/* Right: Actions */}
         <div className="navbar-actions">
           {/* Wishlist */}
-          <button className="nav-item-btn" onClick={()=>navigate('/cart')} >
+          <button className="nav-item-btn" onClick={() => navigate("/cart")}>
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -50,7 +48,7 @@ export default function Navbar() {
 
           {/* Login */}
           {isAuthenticated ? (
-            <button className="nav-item-btn" onClick={handleLogout}  >
+            <button className="nav-item-btn" onClick={handleLogout}>
               <svg
                 className="nav-icon"
                 viewBox="0 0 24 24"
@@ -67,7 +65,7 @@ export default function Navbar() {
               <span className="nav-label">Logout</span>
             </button>
           ) : (
-            <button className="nav-item-btn" onClick={()=>navigate('/login')} >
+            <button className="nav-item-btn" onClick={() => navigate("/login")}>
               <svg
                 className="nav-icon"
                 viewBox="0 0 24 24"
@@ -85,7 +83,7 @@ export default function Navbar() {
           )}
 
           {/* Sell Button with Multi-Color Border */}
-          <button className="sell-btn" onClick={()=>navigate('/sell')} >
+          <button className="sell-btn" onClick={() => navigate("/sell")}>
             <span className="sell-icon">+</span>
             <span className="sell-text">SELL</span>
           </button>

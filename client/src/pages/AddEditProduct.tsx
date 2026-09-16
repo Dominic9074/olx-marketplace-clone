@@ -7,474 +7,399 @@ import LoadingSpinner from "../components/spinloader/LoadingSpinner";
 import { useEffect, useState } from "react";
 import apiClient from "../api/apiClient";
 
-export interface Product{
-    _id:string;
-    title:string,
-    description:string;
-    price:number;
-    category:string;
-    sellerId:string;
-    imageUrl:string;
-    isSold:boolean;
-    createdAt:string;
-    updatedAt:string;
+export interface Product {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  sellerId: string;
+  imageUrl: string;
+  isSold: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface SellProductFormInterface {
-    title: string;
-    description: string;
-    price: number;
-    category: string;
-    image: FileList;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  image: FileList;
 }
 
 export default function AddEditProduct() {
-    const navigate = useNavigate();
-    const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<SellProductFormInterface>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SellProductFormInterface>();
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-    const imageRegister = register("image", {
-        required: !isEditMode ? "Image is Required" : false,
+  const imageRegister = register("image", {
+    required: !isEditMode ? "Image is Required" : false,
+  });
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+
+        const response = await apiClient.get(`/products/${id}`);
+
+        setProduct(response.data.product);
+        setIsEditMode(true);
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || "Failed to fetch product");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  useEffect(() => {
+    if (!product) return;
+
+    reset({
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      category: product.category,
     });
 
-    useEffect(() => {
-        if (!id) return;
+    setImagePreview(product.imageUrl);
+  }, [product, reset]);
 
-        const fetchProduct = async () => {
-            try {
-                setLoading(true);
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-                const response = await apiClient.get(`/products/${id}`);
+    if (!file) {
+      return;
+    }
 
-                setProduct(response.data.product);
-                setIsEditMode(true);
-            } catch (error: any) {
-                toast.error(
-                    error.response?.data?.message ||
-                        "Failed to fetch product"
-                );
-            } finally {
-                setLoading(false);
-            }
-        };
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+  };
 
-        fetchProduct();
-    }, [id]);
+  const handleAddEditProduct = async (data: SellProductFormInterface) => {
+    try {
+      setIsUploading(true);
 
-    useEffect(() => {
-        if (!product) return;
+      let imageUrl = product?.imageUrl || "";
 
-        reset({
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            category: product.category,
+      if (data.image && data.image.length > 0) {
+        imageUrl = await uploadImage(data.image[0]);
+      }
+
+      if (id) {
+        if (!product) {
+          throw new Error("Product details not found");
+        }
+
+        await apiClient.put(`/editProduct/${id}`, {
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          category: data.category,
+          sellerId: product.sellerId,
+          imageUrl,
         });
 
-        setImagePreview(product.imageUrl);
-    }, [product, reset]);
-
-    const handleImageChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const file = event.target.files?.[0];
-
-        if (!file) {
-            return;
+        toast.success("Product updated successfully");
+      } else {
+        if (!data.image || data.image.length === 0) {
+          throw new Error("Please select an image");
         }
 
-        const previewUrl = URL.createObjectURL(file);
-        setImagePreview(previewUrl);
-    };
+        await apiClient.post("/addProduct", {
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          category: data.category,
+          imageUrl,
+        });
 
-    const handleAddEditProduct = async (
-        data: SellProductFormInterface
-    ) => {
-        try {
-            setIsUploading(true);
+        toast.success("Advertisement added successfully");
+      }
 
-            let imageUrl = product?.imageUrl || "";
+      navigate("/sell");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-            if (data.image && data.image.length > 0) {
-                imageUrl = await uploadImage(data.image[0]);
-            }
+  return (
+    <div className="sell-page-wrapper">
+      {(isUploading || loading) && <LoadingSpinner fullScreen size="medium" />}
 
-            if (id) {
-                if (!product) {
-                    throw new Error("Product details not found");
-                }
+      <div className="sell-container">
+        <div className="sell-top-nav">
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <svg
+              className="back-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
 
-                await apiClient.put(`/editProduct/${id}`, {
-                    title: data.title,
-                    description: data.description,
-                    price: data.price,
-                    category: data.category,
-                    sellerId: product.sellerId,
-                    imageUrl,
-                });
-
-                toast.success("Product updated successfully");
-            } else {
-                if (!data.image || data.image.length === 0) {
-                    throw new Error("Please select an image");
-                }
-
-                await apiClient.post("/addProduct", {
-                    title: data.title,
-                    description: data.description,
-                    price: data.price,
-                    category: data.category,
-                    imageUrl,
-                });
-
-                toast.success("Advertisement added successfully");
-            }
-
-            navigate("/sell");
-        } catch (error: any) {
-            toast.error(
-                error.response?.data?.message ||
-                    "Something went wrong"
-            );
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    return (
-        <div className="sell-page-wrapper">
-            {(isUploading || loading) && (
-                <LoadingSpinner
-                    fullScreen
-                    size="medium"
-                />
-            )}
-
-            <div className="sell-container">
-
-                <div className="sell-top-nav">
-                    <button
-                        type="button"
-                        className="back-btn"
-                        onClick={() => navigate(-1)}
-                    >
-                        <svg
-                            className="back-icon"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <line x1="19" y1="12" x2="5" y2="12" />
-                            <polyline points="12 19 5 12 12 5" />
-                        </svg>
-
-                        <span>Back to listings</span>
-                    </button>
-                </div>
-
-                <div className="sell-page-header">
-                    <h1 className="page-heading">
-                        {isEditMode
-                            ? "Edit Your Advertisement"
-                            : "Post Your Advertisement"}
-                    </h1>
-
-                    <p className="page-subheading">
-                        Enter the details below to publish your listing
-                        across the marketplace.
-                    </p>
-                </div>
-
-                <form
-                    className="sell-form-layout"
-                    onSubmit={handleSubmit(handleAddEditProduct)}
-                >
-
-                    <div className="form-left-col">
-
-                        <div className="form-group">
-                            <label
-                                className="form-label"
-                                htmlFor="product-title"
-                            >
-                                Ad Title
-                            </label>
-
-                            <input
-                                id="product-title"
-                                type="text"
-                                className="form-input"
-                                placeholder="e.g. Apple MacBook Air M1 256GB Space Grey"
-                                {...register("title", {
-                                    required: "Title Is Required",
-                                    minLength: {
-                                        value: 3,
-                                        message:
-                                            "At Least 3 characters are required",
-                                    },
-                                })}
-                            />
-
-                            <span className="field-hint">
-                                A clear title helps buyers find your listing
-                                faster.
-                            </span>
-
-                            {errors.title && (
-                                <p
-                                    style={{
-                                        color: "red",
-                                        margin: 0,
-                                    }}
-                                >
-                                    {errors.title.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="form-group">
-                            <label
-                                className="form-label"
-                                htmlFor="product-desc"
-                            >
-                                Description
-                            </label>
-
-                            <textarea
-                                id="product-desc"
-                                className="form-textarea"
-                                rows={6}
-                                placeholder="Mention condition, bill availability, included accessories, or warranty..."
-                                {...register("description", {
-                                    required:
-                                        "Description Is Required",
-                                    minLength: {
-                                        value: 15,
-                                        message:
-                                            "At Least 15 characters are required",
-                                    },
-                                })}
-                            />
-
-                            {errors.description && (
-                                <p
-                                    style={{
-                                        color: "red",
-                                        margin: 0,
-                                    }}
-                                >
-                                    {errors.description.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="form-row-split">
-
-                            <div className="form-group">
-                                <label
-                                    className="form-label"
-                                    htmlFor="product-price"
-                                >
-                                    Set Price
-                                </label>
-
-                                <div className="price-input-wrapper">
-                                    <span className="currency-prefix">
-                                        ₹
-                                    </span>
-
-                                    <input
-                                        id="product-price"
-                                        type="number"
-                                        className="form-input price-field"
-                                        placeholder="0"
-                                        {...register("price", {
-                                            required:
-                                                "Price Is Required",
-                                            min: {
-                                                value: 10,
-                                                message:
-                                                    "At Least 2 digit number is required",
-                                            },
-                                            valueAsNumber: true,
-                                        })}
-                                    />
-                                </div>
-
-                                {errors.price && (
-                                    <p
-                                        style={{
-                                            color: "red",
-                                            margin: 0,
-                                        }}
-                                    >
-                                        {errors.price.message}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label
-                                    className="form-label"
-                                    htmlFor="product-cat"
-                                >
-                                    Category
-                                </label>
-
-                                <select
-                                    id="product-cat"
-                                    className="form-select"
-                                    defaultValue="electronics"
-                                    {...register("category")}
-                                >
-                                    <option value="electronics">
-                                        Electronics & Appliances
-                                    </option>
-
-                                    <option value="mobiles">
-                                        Mobile Phones
-                                    </option>
-
-                                    <option value="cars">
-                                        Cars & Vehicles
-                                    </option>
-
-                                    <option value="bikes">
-                                        Motorcycles & Scooters
-                                    </option>
-
-                                    <option value="furniture">
-                                        Home & Furniture
-                                    </option>
-
-                                    <option value="fashion">
-                                        Fashion & Lifestyle
-                                    </option>
-                                </select>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div className="form-right-col">
-
-                        <div className="form-group">
-                            <label className="form-label">
-                                Upload Product Photo
-                            </label>
-
-                            <label className="image-upload-box">
-
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden-file-input"
-                                    {...imageRegister}
-                                    onChange={(event) => {
-                                        imageRegister.onChange(event);
-                                        handleImageChange(event);
-                                    }}
-                                />
-
-                                {imagePreview ? (
-                                    <div className="image-preview-container">
-                                        <img
-                                            src={imagePreview}
-                                            alt="Product preview"
-                                            className="product-image-preview"
-                                        />
-
-                                        <div className="change-image-overlay">
-                                            <span>
-                                                Change Image
-                                            </span>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="upload-box-content">
-
-                                        <div className="upload-icon-wrapper">
-                                        </div>
-
-                                        <span className="upload-primary-text">
-                                            Add Cover Photo
-                                        </span>
-
-                                        <span className="upload-secondary-text">
-                                            Click or drag & drop
-                                        </span>
-
-                                        <span className="upload-file-types">
-                                            Supports JPG, PNG, WEBP up to 5MB
-                                        </span>
-
-                                    </div>
-                                )}
-
-                            </label>
-
-                            {errors.image && (
-                                <p
-                                    style={{
-                                        color: "red",
-                                        margin: 0,
-                                    }}
-                                >
-                                    {errors.image.message}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="publish-panel">
-
-                            <div className="security-notice">
-                                <svg
-                                    className="shield-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-
-                                <span>
-                                    Your listing goes live instantly across
-                                    buyers in your region.
-                                </span>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="publish-btn"
-                            >
-                                {isEditMode
-                                    ? "Update Advertisement"
-                                    : "Post Advertisement"}
-                            </button>
-
-                        </div>
-                    </div>
-
-                </form>
-            </div>
+            <span>Back to listings</span>
+          </button>
         </div>
-    );
+
+        <div className="sell-page-header">
+          <h1 className="page-heading">
+            {isEditMode ? "Edit Your Advertisement" : "Post Your Advertisement"}
+          </h1>
+
+          <p className="page-subheading">
+            Enter the details below to publish your listing across the
+            marketplace.
+          </p>
+        </div>
+
+        <form
+          className="sell-form-layout"
+          onSubmit={handleSubmit(handleAddEditProduct)}
+        >
+          <div className="form-left-col">
+            <div className="form-group">
+              <label className="form-label" htmlFor="product-title">
+                Ad Title
+              </label>
+
+              <input
+                id="product-title"
+                type="text"
+                className="form-input"
+                placeholder="e.g. Apple MacBook Air M1 256GB Space Grey"
+                {...register("title", {
+                  required: "Title Is Required",
+                  minLength: {
+                    value: 3,
+                    message: "At Least 3 characters are required",
+                  },
+                })}
+              />
+
+              <span className="field-hint">
+                A clear title helps buyers find your listing faster.
+              </span>
+
+              {errors.title && (
+                <p
+                  style={{
+                    color: "red",
+                    margin: 0,
+                  }}
+                >
+                  {errors.title.message}
+                </p>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="product-desc">
+                Description
+              </label>
+
+              <textarea
+                id="product-desc"
+                className="form-textarea"
+                rows={6}
+                placeholder="Mention condition, bill availability, included accessories, or warranty..."
+                {...register("description", {
+                  required: "Description Is Required",
+                  minLength: {
+                    value: 15,
+                    message: "At Least 15 characters are required",
+                  },
+                })}
+              />
+
+              {errors.description && (
+                <p
+                  style={{
+                    color: "red",
+                    margin: 0,
+                  }}
+                >
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            <div className="form-row-split">
+              <div className="form-group">
+                <label className="form-label" htmlFor="product-price">
+                  Set Price
+                </label>
+
+                <div className="price-input-wrapper">
+                  <span className="currency-prefix">₹</span>
+
+                  <input
+                    id="product-price"
+                    type="number"
+                    className="form-input price-field"
+                    placeholder="0"
+                    {...register("price", {
+                      required: "Price Is Required",
+                      min: {
+                        value: 10,
+                        message: "At Least 2 digit number is required",
+                      },
+                      valueAsNumber: true,
+                    })}
+                  />
+                </div>
+
+                {errors.price && (
+                  <p
+                    style={{
+                      color: "red",
+                      margin: 0,
+                    }}
+                  >
+                    {errors.price.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="product-cat">
+                  Category
+                </label>
+
+                <select
+                  id="product-cat"
+                  className="form-select"
+                  defaultValue="electronics"
+                  {...register("category")}
+                >
+                  <option value="electronics">Electronics & Appliances</option>
+
+                  <option value="mobiles">Mobile Phones</option>
+
+                  <option value="cars">Cars & Vehicles</option>
+
+                  <option value="bikes">Motorcycles & Scooters</option>
+
+                  <option value="furniture">Home & Furniture</option>
+
+                  <option value="fashion">Fashion & Lifestyle</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="form-right-col">
+            <div className="form-group">
+              <label className="form-label">Upload Product Photo</label>
+
+              <label className="image-upload-box">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden-file-input"
+                  {...imageRegister}
+                  onChange={(event) => {
+                    imageRegister.onChange(event);
+                    handleImageChange(event);
+                  }}
+                />
+
+                {imagePreview ? (
+                  <div className="image-preview-container">
+                    <img
+                      src={imagePreview}
+                      alt="Product preview"
+                      className="product-image-preview"
+                    />
+
+                    <div className="change-image-overlay">
+                      <span>Change Image</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="upload-box-content">
+                    <div className="upload-icon-wrapper"></div>
+
+                    <span className="upload-primary-text">Add Cover Photo</span>
+
+                    <span className="upload-secondary-text">
+                      Click or drag & drop
+                    </span>
+
+                    <span className="upload-file-types">
+                      Supports JPG, PNG, WEBP up to 5MB
+                    </span>
+                  </div>
+                )}
+              </label>
+
+              {errors.image && (
+                <p
+                  style={{
+                    color: "red",
+                    margin: 0,
+                  }}
+                >
+                  {errors.image.message}
+                </p>
+              )}
+            </div>
+
+            <div className="publish-panel">
+              <div className="security-notice">
+                <svg
+                  className="shield-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+
+                <span>
+                  Your listing goes live instantly across buyers in your region.
+                </span>
+              </div>
+
+              <button type="submit" className="publish-btn">
+                {isEditMode ? "Update Advertisement" : "Post Advertisement"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }

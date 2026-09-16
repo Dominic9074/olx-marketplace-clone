@@ -3,7 +3,9 @@
   background-color: #f1f5f7;
   padding: 30px 24px 80px;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
 }
 
 .cart-content-container {
@@ -31,7 +33,9 @@
   cursor: pointer;
   padding: 0;
   width: fit-content;
-  transition: color 0.15s ease, transform 0.15s ease;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .cart-back-btn:hover {
@@ -248,7 +252,9 @@
   font-weight: 700;
   border-radius: 8px;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.1s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.1s ease;
 }
 
 .checkout-btn:hover:not(:disabled) {

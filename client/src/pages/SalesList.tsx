@@ -10,75 +10,69 @@ import apiClient from "../api/apiClient";
 import type Product from "../types/productType";
 
 export function SalesList() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
 
-                const response = await apiClient.get("/products");
+        const response = await apiClient.get("/products");
 
-                setProducts(response.data.products);
-            } catch (error: any) {
-                toast.error(
-                    error.response?.data?.message ||
-                    "Failed to fetch products"
-                );
-            } finally {
-                setLoading(false);
-            }
-        };
+        setProducts(response.data.products);
+      } catch (error: any) {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch products",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        fetchProducts();
-    }, []);
+    fetchProducts();
+  }, []);
 
-    const filteredProducts = products.filter(
-        (product) => product.sellerId === user?.id
-    );
+  const filteredProducts = products.filter(
+    (product) => product.sellerId === user?.id,
+  );
 
-    return (
-        <>
-            <Navbar />
+  return (
+    <>
+      <Navbar />
 
-            <div className="my-products-container">
-                <div className="my-products-header">
-                    <h2 className="section-title">
-                        My Listed Products
-                    </h2>
+      <div className="my-products-container">
+        <div className="my-products-header">
+          <h2 className="section-title">My Listed Products</h2>
 
-                    <button
-                        className="sell-product-btn"
-                        onClick={() => navigate("/sell/product")}
-                    >
-                        + Sell Product
-                    </button>
-                </div>
+          <button
+            className="sell-product-btn"
+            onClick={() => navigate("/sell/product")}
+          >
+            + Sell Product
+          </button>
+        </div>
 
-                <div className="my-products-grid">
-                    {loading ? (
-                        <LoadingSpinner
-                            fullScreen={true}
-                            size="medium"
-                        />
-                    ) : filteredProducts.length > 0 ? (
-                        filteredProducts.map((product) => (
-                            <ProductCard
-                                key={product._id}
-                                product={product}
-                                isSeller={true}
-                            />
-                        ))
-                    ) : (
-                        <h2>No Products Listed</h2>
-                    )}
-                </div>
-            </div>
-        </>
-    );
+        <div className="my-products-grid">
+          {loading ? (
+            <LoadingSpinner fullScreen={true} size="medium" />
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                isSeller={true}
+              />
+            ))
+          ) : (
+            <h2>No Products Listed</h2>
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
