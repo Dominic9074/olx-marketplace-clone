@@ -97,7 +97,7 @@ export const updateProductController=async (req:Request,res:Response)=>{
 
    }catch(error){
       res.status(400).json({
-         success:"false",
+         success:false,
          message:error instanceof Error ? error.message :'Failed To Update Product'
       })
    }
