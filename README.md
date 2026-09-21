@@ -125,7 +125,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 ### Frontend
 
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/
 
 ## Authentication
 
