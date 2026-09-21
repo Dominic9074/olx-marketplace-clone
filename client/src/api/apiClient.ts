@@ -3,7 +3,7 @@ import type { RootState } from "../app/store";
 import type { Store } from "@reduxjs/toolkit";
 
 const apiClient = axios.create({
-  baseURL: "https://olx-marketplace-clone-alpha.vercel.app/",
+  baseURL: "https://olx-marketplace-clone-fz64.vercel.app/",
   headers: {
     "Content-Type": "application/json",
   },
