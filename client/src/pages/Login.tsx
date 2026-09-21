@@ -21,7 +21,7 @@ export default function Login() {
   } = useForm<userFormInterface>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { error } = useAppSelector((state) => state.auth);
 
   const handleLogin = async (data: userFormInterface) => {
     const result = await dispatch(loginUser(data));
