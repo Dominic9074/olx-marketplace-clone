@@ -30,7 +30,7 @@ export default function Signup() {
     if (registerUser.fulfilled.match(result)) {
       console.log("SignUp Successful");
       toast.success("Account Created Successfully");
-      navigate("/");
+      navigate("/login");
     }
   };
 
