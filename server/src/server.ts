@@ -9,7 +9,10 @@ import productRoute from './routes/productRoute'
 
 const app =express()
 
-app.use(cors());
+app.use(cors({
+  origin: "https://olx-marketplace-clone-alpha.vercel.app",
+  credentials: true,
+}));
 app.use(express.json())
 
 
